@@ -1,5 +1,7 @@
 import Image from 'next/image'
 
+import { Button } from '@/components/atoms/Button'
+
 export default function Home() {
   return (
     <div className="flex flex-1 flex-col items-center justify-center bg-zinc-50 font-sans dark:bg-black">
@@ -16,6 +18,10 @@ export default function Home() {
           <h1 className="max-w-xs text-3xl leading-10 font-semibold tracking-tight text-black dark:text-zinc-50">
             To get started, edit the page.tsx file.
           </h1>
+          <Button variant="danger" isLoading={true} disabled={true}>
+            Deploy Now
+          </Button>
+
           <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
             Looking for a starting point or more instructions? Head over to{' '}
             <a
