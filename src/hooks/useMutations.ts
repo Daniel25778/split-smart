@@ -1,6 +1,8 @@
 import { useState, useCallback } from 'react'
-import type { CreateExpenseInput, CreateGroupInput, Expense, Group } from '@/types'
+
 import { createExpense, createGroup, deleteExpense } from '@/services'
+
+import type { CreateExpenseInput, CreateGroupInput } from '@/types'
 
 export const useCreateGroup = () => {
   const [loading, setLoading] = useState(false)
@@ -17,7 +19,7 @@ export const useCreateGroup = () => {
         return null
       }
       return response.data
-    } catch (err) {
+    } catch (_err) {
       setError('Falha ao criar grupo')
       return null
     } finally {
@@ -43,7 +45,7 @@ export const useCreateExpense = () => {
         return null
       }
       return response.data
-    } catch (err) {
+    } catch (_err) {
       setError('Falha ao criar despesa')
       return null
     } finally {
@@ -69,7 +71,7 @@ export const useDeleteExpense = () => {
         return false
       }
       return response.data
-    } catch (err) {
+    } catch (_err) {
       setError('Falha ao deletar despesa')
       return false
     } finally {

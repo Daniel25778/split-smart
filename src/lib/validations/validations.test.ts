@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest'
+
 import {
   createUserSchema,
   updateUserSchema,
   createGroupSchema,
-  updateGroupSchema,
   addMemberSchema,
   createExpenseSchema,
   updateExpenseSchema,

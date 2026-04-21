@@ -13,16 +13,18 @@ export const createUserSchema = z.object({
     .regex(/[0-9]/, 'Senha deve conter pelo menos um número'),
 })
 
-export const updateUserSchema = z.object({
-  name: z
-    .string()
-    .min(2, 'Nome deve ter pelo menos 2 caracteres')
-    .max(50, 'Nome deve ter no máximo 50 caracteres')
-    .optional(),
-  avatarUrl: z.string().url('URL de avatar inválida').optional(),
-}).refine((data) => Object.keys(data).length > 0, {
-  message: 'Pelo menos um campo deve ser fornecido para atualização',
-})
+export const updateUserSchema = z
+  .object({
+    name: z
+      .string()
+      .min(2, 'Nome deve ter pelo menos 2 caracteres')
+      .max(50, 'Nome deve ter no máximo 50 caracteres')
+      .optional(),
+    avatarUrl: z.string().url('URL de avatar inválida').optional(),
+  })
+  .refine((data) => Object.keys(data).length > 0, {
+    message: 'Pelo menos um campo deve ser fornecido para atualização',
+  })
 
 export type CreateUserInput = z.infer<typeof createUserSchema>
 export type UpdateUserInput = z.infer<typeof updateUserSchema>

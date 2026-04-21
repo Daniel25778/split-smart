@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
-import type { Group, GroupSummary } from '@/types'
+
 import { getGroups, getGroupById } from '@/services'
+
+import type { Group, GroupSummary } from '@/types'
 
 export const useGroups = (userId: string) => {
   const [groups, setGroups] = useState<GroupSummary[]>([])
@@ -19,7 +21,7 @@ export const useGroups = (userId: string) => {
       } else {
         setGroups(response.data)
       }
-    } catch (err) {
+    } catch (_err) {
       setError('Falha ao buscar grupos')
       setGroups([])
     } finally {
@@ -28,6 +30,7 @@ export const useGroups = (userId: string) => {
   }, [userId])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchGroups()
   }, [fetchGroups])
 
@@ -55,7 +58,7 @@ export const useGroup = (groupId: string) => {
       } else {
         setGroup(response.data)
       }
-    } catch (err) {
+    } catch (_err) {
       setError('Falha ao buscar grupo')
       setGroup(null)
     } finally {
@@ -64,6 +67,7 @@ export const useGroup = (groupId: string) => {
   }, [groupId])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchGroup()
   }, [fetchGroup])
 

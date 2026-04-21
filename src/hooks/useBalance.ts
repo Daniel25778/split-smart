@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
-import type { Settlement, UserBalance } from '@/types'
+
 import { getGroupBalances, getSettlements } from '@/services'
+
+import type { Settlement, UserBalance } from '@/types'
 
 export const useGroupBalances = (groupId: string) => {
   const [balances, setBalances] = useState<UserBalance[]>([])
@@ -19,7 +21,7 @@ export const useGroupBalances = (groupId: string) => {
       } else {
         setBalances(response.data)
       }
-    } catch (err) {
+    } catch (_err) {
       setError('Falha ao buscar saldos')
       setBalances([])
     } finally {
@@ -28,6 +30,7 @@ export const useGroupBalances = (groupId: string) => {
   }, [groupId])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchBalances()
   }, [fetchBalances])
 
@@ -51,7 +54,7 @@ export const useSettlements = (groupId: string) => {
       } else {
         setSettlements(response.data)
       }
-    } catch (err) {
+    } catch (_err) {
       setError('Falha ao buscar settlements')
       setSettlements([])
     } finally {
@@ -60,6 +63,7 @@ export const useSettlements = (groupId: string) => {
   }, [groupId])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchSettlements()
   }, [fetchSettlements])
 

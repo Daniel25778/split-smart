@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
-import type { Expense } from '@/types'
+
 import { getExpensesByGroup } from '@/services'
+
+import type { Expense } from '@/types'
 
 export const useExpenses = (groupId: string) => {
   const [expenses, setExpenses] = useState<Expense[]>([])
@@ -19,7 +21,7 @@ export const useExpenses = (groupId: string) => {
       } else {
         setExpenses(response.data)
       }
-    } catch (err) {
+    } catch (_err) {
       setError('Falha ao buscar despesas')
       setExpenses([])
     } finally {
@@ -28,6 +30,7 @@ export const useExpenses = (groupId: string) => {
   }, [groupId])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchExpenses()
   }, [fetchExpenses])
 
