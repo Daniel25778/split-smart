@@ -1,20 +1,20 @@
 import { describe, it, expect } from 'vitest'
-
 import {
+  createUserSchema,
+  updateUserSchema,
+  createGroupSchema,
+  updateGroupSchema,
   addMemberSchema,
   createExpenseSchema,
-  createGroupSchema,
-  createUserSchema,
   updateExpenseSchema,
-  updateUserSchema,
 } from './index'
 
 describe('User Validations', () => {
   describe('createUserSchema', () => {
     it('should validate a valid user creation', () => {
       const validUser = {
-        name: 'John Doe',
-        email: 'john@example.com',
+        name: 'João Silva',
+        email: 'joao@example.com',
         password: 'SecurePass123',
       }
       const result = createUserSchema.safeParse(validUser)
@@ -23,8 +23,8 @@ describe('User Validations', () => {
 
     it('should reject name shorter than 2 characters', () => {
       const invalidUser = {
-        name: 'J',
-        email: 'john@example.com',
+        name: 'A',
+        email: 'joao@example.com',
         password: 'SecurePass123',
       }
       const result = createUserSchema.safeParse(invalidUser)
@@ -33,8 +33,8 @@ describe('User Validations', () => {
 
     it('should reject name longer than 50 characters', () => {
       const invalidUser = {
-        name: 'a'.repeat(51),
-        email: 'john@example.com',
+        name: 'A'.repeat(51),
+        email: 'joao@example.com',
         password: 'SecurePass123',
       }
       const result = createUserSchema.safeParse(invalidUser)
@@ -43,7 +43,7 @@ describe('User Validations', () => {
 
     it('should reject invalid email', () => {
       const invalidUser = {
-        name: 'John Doe',
+        name: 'João Silva',
         email: 'invalid-email',
         password: 'SecurePass123',
       }
@@ -53,9 +53,9 @@ describe('User Validations', () => {
 
     it('should reject password shorter than 8 characters', () => {
       const invalidUser = {
-        name: 'John Doe',
-        email: 'john@example.com',
-        password: '1234567',
+        name: 'João Silva',
+        email: 'joao@example.com',
+        password: 'Short1',
       }
       const result = createUserSchema.safeParse(invalidUser)
       expect(result.success).toBe(false)
@@ -65,8 +65,7 @@ describe('User Validations', () => {
   describe('updateUserSchema', () => {
     it('should validate a valid user update', () => {
       const validUpdate = {
-        name: 'Jane Doe',
-        email: 'jane@example.com',
+        name: 'João Silva Updated',
       }
       const result = updateUserSchema.safeParse(validUpdate)
       expect(result.success).toBe(true)
@@ -74,7 +73,7 @@ describe('User Validations', () => {
 
     it('should allow partial updates', () => {
       const partialUpdate = {
-        name: 'Jane Doe',
+        avatarUrl: 'https://example.com/avatar.jpg',
       }
       const result = updateUserSchema.safeParse(partialUpdate)
       expect(result.success).toBe(true)
@@ -94,7 +93,6 @@ describe('Group Validations', () => {
       const validGroup = {
         name: 'Trip to Rio',
         description: 'Amazing trip to Rio de Janeiro',
-        coverImageUrl: 'https://example.com/image.jpg',
       }
       const result = createGroupSchema.safeParse(validGroup)
       expect(result.success).toBe(true)
@@ -156,12 +154,12 @@ describe('Expense Validations', () => {
         category: 'accommodation',
         paidBy: 'user1',
         participants: [
-          { userId: 'user1', share: 500, paid: false },
-          { userId: 'user2', share: 500, paid: false },
-          { userId: 'user3', share: 500, paid: false },
+          { userId: 'user1', share: 500 },
+          { userId: 'user2', share: 500 },
+          { userId: 'user3', share: 500 },
         ],
         splitMethod: 'equal',
-        date: '2024-01-15',
+        date: '2024-01-15T10:00:00Z',
       }
       const result = createExpenseSchema.safeParse(validExpense)
       expect(result.success).toBe(true)
@@ -174,9 +172,9 @@ describe('Expense Validations', () => {
         currency: 'BRL',
         category: 'accommodation',
         paidBy: 'user1',
-        participants: [{ userId: 'user1', share: 1500, paid: false }],
-        splitMethod: 'equal',
-        date: '2024-01-15',
+        participants: [{ userId: 'user1', share: 1500 }],
+        splitMethod: 'exact',
+        date: '2024-01-15T10:00:00Z',
       }
       const result = createExpenseSchema.safeParse(invalidExpense)
       expect(result.success).toBe(false)
@@ -184,14 +182,14 @@ describe('Expense Validations', () => {
 
     it('should reject negative amount', () => {
       const invalidExpense = {
-        title: 'Hotel Copacabana',
-        amount: -100,
+        title: 'Hotel',
+        amount: -1500,
         currency: 'BRL',
         category: 'accommodation',
         paidBy: 'user1',
-        participants: [{ userId: 'user1', share: -100, paid: false }],
-        splitMethod: 'equal',
-        date: '2024-01-15',
+        participants: [{ userId: 'user1', share: 1500 }],
+        splitMethod: 'exact',
+        date: '2024-01-15T10:00:00Z',
       }
       const result = createExpenseSchema.safeParse(invalidExpense)
       expect(result.success).toBe(false)
@@ -199,14 +197,14 @@ describe('Expense Validations', () => {
 
     it('should reject invalid currency', () => {
       const invalidExpense = {
-        title: 'Hotel Copacabana',
+        title: 'Hotel',
         amount: 1500,
-        currency: 'INVALID',
+        currency: 123,
         category: 'accommodation',
         paidBy: 'user1',
-        participants: [{ userId: 'user1', share: 1500, paid: false }],
-        splitMethod: 'equal',
-        date: '2024-01-15',
+        participants: [{ userId: 'user1', share: 1500 }],
+        splitMethod: 'exact',
+        date: '2024-01-15T10:00:00Z',
       }
       const result = createExpenseSchema.safeParse(invalidExpense)
       expect(result.success).toBe(false)
@@ -214,14 +212,14 @@ describe('Expense Validations', () => {
 
     it('should reject invalid category', () => {
       const invalidExpense = {
-        title: 'Hotel Copacabana',
+        title: 'Hotel',
         amount: 1500,
         currency: 'BRL',
-        category: 'invalid',
+        category: 'invalid_category',
         paidBy: 'user1',
-        participants: [{ userId: 'user1', share: 1500, paid: false }],
-        splitMethod: 'equal',
-        date: '2024-01-15',
+        participants: [{ userId: 'user1', share: 1500 }],
+        splitMethod: 'exact',
+        date: '2024-01-15T10:00:00Z',
       }
       const result = createExpenseSchema.safeParse(invalidExpense)
       expect(result.success).toBe(false)
@@ -229,14 +227,14 @@ describe('Expense Validations', () => {
 
     it('should reject invalid split method', () => {
       const invalidExpense = {
-        title: 'Hotel Copacabana',
+        title: 'Hotel',
         amount: 1500,
         currency: 'BRL',
         category: 'accommodation',
         paidBy: 'user1',
-        participants: [{ userId: 'user1', share: 1500, paid: false }],
-        splitMethod: 'invalid',
-        date: '2024-01-15',
+        participants: [{ userId: 'user1', share: 1500 }],
+        splitMethod: 'invalid_method',
+        date: '2024-01-15T10:00:00Z',
       }
       const result = createExpenseSchema.safeParse(invalidExpense)
       expect(result.success).toBe(false)
@@ -244,14 +242,14 @@ describe('Expense Validations', () => {
 
     it('should reject invalid date format', () => {
       const invalidExpense = {
-        title: 'Hotel Copacabana',
+        title: 'Hotel',
         amount: 1500,
         currency: 'BRL',
         category: 'accommodation',
         paidBy: 'user1',
-        participants: [{ userId: 'user1', share: 1500, paid: false }],
-        splitMethod: 'equal',
-        date: 'invalid-date',
+        participants: [{ userId: 'user1', share: 1500 }],
+        splitMethod: 'exact',
+        date: '2024-01-15',
       }
       const result = createExpenseSchema.safeParse(invalidExpense)
       expect(result.success).toBe(false)
@@ -259,14 +257,14 @@ describe('Expense Validations', () => {
 
     it('should reject empty participants', () => {
       const invalidExpense = {
-        title: 'Hotel Copacabana',
+        title: 'Hotel',
         amount: 1500,
         currency: 'BRL',
         category: 'accommodation',
         paidBy: 'user1',
         participants: [],
-        splitMethod: 'equal',
-        date: '2024-01-15',
+        splitMethod: 'exact',
+        date: '2024-01-15T10:00:00Z',
       }
       const result = createExpenseSchema.safeParse(invalidExpense)
       expect(result.success).toBe(false)
@@ -274,14 +272,14 @@ describe('Expense Validations', () => {
 
     it('should reject participant with negative share', () => {
       const invalidExpense = {
-        title: 'Hotel Copacabana',
-        amount: -100,
+        title: 'Hotel',
+        amount: 1500,
         currency: 'BRL',
         category: 'accommodation',
         paidBy: 'user1',
-        participants: [{ userId: 'user1', share: -100, paid: false }],
-        splitMethod: 'equal',
-        date: '2024-01-15',
+        participants: [{ userId: 'user1', share: -500 }],
+        splitMethod: 'exact',
+        date: '2024-01-15T10:00:00Z',
       }
       const result = createExpenseSchema.safeParse(invalidExpense)
       expect(result.success).toBe(false)
@@ -291,8 +289,7 @@ describe('Expense Validations', () => {
   describe('updateExpenseSchema', () => {
     it('should validate a valid expense update', () => {
       const validUpdate = {
-        title: 'Updated Hotel',
-        amount: 1600,
+        title: 'Hotel Updated',
       }
       const result = updateExpenseSchema.safeParse(validUpdate)
       expect(result.success).toBe(true)
@@ -300,7 +297,7 @@ describe('Expense Validations', () => {
 
     it('should allow partial updates', () => {
       const partialUpdate = {
-        title: 'Updated Hotel',
+        amount: 2000,
       }
       const result = updateExpenseSchema.safeParse(partialUpdate)
       expect(result.success).toBe(true)

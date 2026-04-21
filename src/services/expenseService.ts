@@ -128,7 +128,7 @@ export const updateExpense = async (
   }
 }
 
-export const deleteExpense = async (expenseId: string): Promise<ApiResponse<void>> => {
+export const deleteExpense = async (expenseId: string): Promise<ApiResponse<boolean>> => {
   await mockDelay()
 
   try {
@@ -136,7 +136,7 @@ export const deleteExpense = async (expenseId: string): Promise<ApiResponse<void
 
     if (index === -1) {
       return {
-        data: undefined,
+        data: false,
         error: 'Despesa não encontrada',
         loading: false,
       }
@@ -145,13 +145,13 @@ export const deleteExpense = async (expenseId: string): Promise<ApiResponse<void
     MOCK_EXPENSES.splice(index, 1)
 
     return {
-      data: undefined,
+      data: true,
       error: null,
       loading: false,
     }
   } catch (_error) {
     return {
-      data: undefined,
+      data: false,
       error: 'Falha ao deletar despesa',
       loading: false,
     }

@@ -20,6 +20,8 @@ export const updateUserSchema = z.object({
     .max(50, 'Nome deve ter no máximo 50 caracteres')
     .optional(),
   avatarUrl: z.string().url('URL de avatar inválida').optional(),
+}).refine((data) => Object.keys(data).length > 0, {
+  message: 'Pelo menos um campo deve ser fornecido para atualização',
 })
 
 export type CreateUserInput = z.infer<typeof createUserSchema>

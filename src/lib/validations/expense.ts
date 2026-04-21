@@ -119,6 +119,9 @@ export const updateExpenseSchema = z
       path: ['participants'],
     },
   )
+  .refine((data) => Object.keys(data).length > 0, {
+    message: 'Pelo menos um campo deve ser fornecido para atualização',
+  })
 
 export type CreateExpenseInput = z.infer<typeof createExpenseSchema>
 export type UpdateExpenseInput = z.infer<typeof updateExpenseSchema>
